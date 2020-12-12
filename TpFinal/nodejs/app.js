@@ -151,21 +151,30 @@ app.get("/persona/:id", async (req, res) => {
     }
 });
 
-app.get("/persona", async (req, res) => {
+//Para buscar persona por "Alias" ==> localhost:3001/persona?alias=Pepe
+
+app.get('/persona', async (req, res) => {
+
     try {
+        if (req.query.alias) {
+            const buscarAlias = req.query.alias;
+            const unAlias = await PersonaModel.find({alias: buscarAlias});
 
-        const personas = await PersonaModel.find();
-
-        console.log(personas);
-
-        res.status(200).send(personas);
-    } 
-    catch (error) {
-        console.log(error);
-        res.status(406).send({error: "algo falló"});
+            if (unAlias.length == 0) {
+                throw new Error('No existen personas con ese ALIAS');
+            }
+            res.status(200).send(unAlias);
+        }
+        if (!req.query.alias) {
+            const personas = await PersonaModel.find();
+            res.status(200).send(personas);
+        }
     }
-    
-  });
+    catch(error) {
+        console.log(error);
+        res.status(406).send("No existen personas con ese ALIAS");
+    }
+});
 
 app.post("/persona", async (req, res) => {
     try { 
@@ -238,17 +247,37 @@ app.get("/libro/:id", async (req, res) => {
     res.status(200).send("respuesta get /libro");
 });
 
+//Para buscar libro por: "Nombre" ==> localhost:3001/libro?nombre=IT
+//                       "Genero" ==> localhost:3001/libro?genero=Terror
+
 app.get("/libro", async (req, res) => {
     try {
-        const libros = await LibroModel.find();
+        if (req.query.nombre) {
+            const libroPedido = req.query.nombre;
+            const nombreLibro = await LibroModel.find({nombre: libroPedido});
 
-        console.log(libros);
+            if (nombreLibro.length == 0) {
+                throw new Error('No existen libros con ese NOMBRE');
+            }
+            res.status(200).send(nombreLibro);
+        }
+        if (req.query.genero) {
+            const generoPedido = req.query.genero;
+            const genero = await GeneroModel.findOne({nombre: generoPedido});
 
-        res.status(200).send(libros);
-    } 
-    catch (error) {
+            if (genero == null) {
+                throw new Error('No existe ese GENERO');
+            }
+            const libroGenero = await LibroModel.find({genero: genero._id});
+            if (libroGenero.length == 0) {
+                throw new Error('No existen libros con ese GENERO');
+            }
+            res.status(200).send(libroGenero);
+        }
+    }
+    catch(error) {
         console.log(error);
-        res.status(406).send({error: "algo falló"});
+        res.status(406).send("No existen libros con esos datos");
     }
     
 });
