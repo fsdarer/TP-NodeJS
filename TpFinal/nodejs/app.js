@@ -1,7 +1,7 @@
 const express = require("express");
 const mongodb = require('mongodb');
 const mongoose = require('mongoose');
-
+const port = process.env.port?process.env.port:3001;
 const app = express();
 
 app.use(express.json());
@@ -340,6 +340,6 @@ app.put("/libro/:id", async (req, res) => {
 });
 
 
-app.listen(3001, () => {
+app.listen(port, () => {
     console.log("Servidor escuchando en el puerto 3001");
 }); 
