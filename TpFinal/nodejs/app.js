@@ -246,6 +246,17 @@ app.get("/libro/:id", async (req, res) => {
     }
     res.status(200).send("respuesta get /libro");
 });
+//Listar todos los libros
+
+app.get('/libro', async (req, res) => {
+    try{
+        const libros = await LibroModel.find();
+        res.status(200).send(libros);
+    }
+    catch(error) {
+        console.log(error);
+    }
+})
 
 //Para buscar libro por: "Nombre" ==> localhost:3001/libro?nombre=IT
 //                       "Genero" ==> localhost:3001/libro?genero=Terror
