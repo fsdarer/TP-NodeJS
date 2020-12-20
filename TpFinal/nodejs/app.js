@@ -244,7 +244,7 @@ app.get("/libro/:id", async (req, res) => {
 });
 //Listar todos los libros
 
-app.get("/listarLibro", async (req, res) => {
+app.get("/listar/libro", async (req, res) => {
   try {
     const libros = await LibroModel.find();
 
