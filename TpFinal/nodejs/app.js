@@ -244,7 +244,21 @@ app.get("/libro/:id", async (req, res) => {
 });
 //Listar todos los libros
 
-app.get("/listar/libro", async (req, res) => {
+app.get("/libro", async (req, res) => {
+    try {
+      const libros = await LibroModel.find();
+  
+      console.log(libros);
+  
+      res.status(200).send(libros);
+    } catch (error) {
+      console.log(error);
+      res.status(406).send({ error: "algo falló" });
+    }
+  });
+
+
+/*app.get("/libro", async (req, res) => {
   try {
     const libros = await LibroModel.find();
 
@@ -255,7 +269,7 @@ app.get("/listar/libro", async (req, res) => {
     console.log(error);
     res.status(406).send({ error: "algo falló" });
   }
-});
+});*/
 
 //Para buscar libro por: "Nombre" ==> localhost:3001/libro?nombre=IT
 //                       "Genero" ==> localhost:3001/libro?genero=Terror
